@@ -1,0 +1,27 @@
+{
+    "origin": [
+        "The #adjective# #noun# of #name#",
+        "A #adjective# #noun# by #name#"
+    ],
+    "neg_adjective": [
+        "Forbidden",
+        "Bad",
+        "Deadly",
+        "Bloody"
+    ],
+    "pos_adjective": [
+        "Marvelous",
+        "Amazing",
+        "Great",
+        "Fantastic"
+    ],
+    "noun": [
+        "Life",
+        "Adventure",
+        "Story",
+        "Tale",
+        "Explosion",
+        "Death",
+        "Destruction"
+    ]
+}
