@@ -8,7 +8,7 @@
                 overflow: hidden;
                 background-color: darkslateblue;
             }
-            
+
             .toolbar{
                 position: fixed;
                 width:100%;
@@ -2432,7 +2432,7 @@ CHAR 255
             let endingIndex = 0;
             let roomIndex = 0;
             let avatarNoun = "";
-            
+
             let avatarMarkov = new Markov2D();
             avatarMarkov.loadFromCSV("assets/avatar.csv");
             let spriteMarkov = new Markov2D();
@@ -2448,7 +2448,7 @@ CHAR 255
             nomoreTracery.loadTraceryRules("assets/noMoreDialog.json");
             let fillingTracery = new TraceryRules();
             fillingTracery.loadTraceryRules("assets/edgeDialog.json");
-            
+
             let endingGraphics = readImageFile("assets/ending.txt");
             let questionGraphics = readImageFile("assets/question.txt");
             let directionGraphics = readImageFile("assets/directions.txt");
@@ -2485,7 +2485,7 @@ CHAR 255
                     "adjective": adjectives
                 });
             }
-            
+
             function getGameCode() {
                 let inputText = nlp(document.getElementById("inputText").value);
                 if(inputText.sentences().length <= 0){
@@ -2579,7 +2579,7 @@ CHAR 255
                     wallGraphics["neg"].push(generateGraphics(wallsMarkov, 30, 64, makeCornerSymmetry,0.2, 1));
                     wallGraphics["pos"].push(generateGraphics(wallsMarkov, 30, 64, makeCornerSymmetry, 0, 0.15));
                     wallGraphics["neutral"].push(generateGraphics(wallsMarkov, 30, 64, makeCornerSymmetry, 0.15, 0.2));
-                    
+
                     let symFun = makeLeftCornerSymmetry;
                     if (Math.random() < 0.5) {
                         symFun = makeRightCornerSymmetry;
@@ -2595,7 +2595,7 @@ CHAR 255
                 let spriteLines = getSprites(sentences);
                 let wallTiles = getWallTiles(sentences);
                 let decorTiles = getDecorTiles(sentences);
-                let directionTiles = getDirectionTiles(); 
+                let directionTiles = getDirectionTiles();
 
                 //Convert to array
                 let walls = [];
@@ -2628,7 +2628,7 @@ CHAR 255
                 let outputText = gameName + "\n";
                 outputText += "\n";
                 outputText += "# BITSY VERSION 6.2\n" +
-                                "\n" + 
+                                "\n" +
                                 "! ROOM_FORMAT 1\n";
                 for(let p of palletes){
                     outputText += "\n" + p.toString();
@@ -2668,7 +2668,7 @@ CHAR 255
                     attachCanvas(document.getElementById("game"));
                     load_game(code);
                 }
-                
+
             }
 
             function stopExportedGame(){
@@ -2704,7 +2704,7 @@ CHAR 255
         </div>
         <div class="footer">
             <div class="affliation" style="text-align: left">Tool by <a href="http://www.akhalifa.com">Ahmed Khalifa</a></div>
-            <div class="affliation" style="text-align: right; right: 0%;">Grab the code from <a href="">Github</a></div>
+            <div class="affliation" style="text-align: right; right: 0%;">Grab the code from <a href="https://github.com/amidos2006/BitsyDo">Github</a></div>
         </div>
     </body>
 </html>
