@@ -24,10 +24,13 @@ The animation object contains two numpy array of the same length (15414 entries)
 Each entry from either "frame1" or "frame2" is an 8x8 binary image.
 
 Here are some examples of the animations:
-
-<img width="100" src="graphics/animation_0.png"/>
-<img width="100" src="graphics/animation_1.png"/>
-<img width="100" src="graphics/animation_2.png"/>
+<table>
+  <tr>
+    <td><img width="100" src="graphics/animation_0.png"/></td>
+    <td><img width="100" src="graphics/animation_1.png"/></td>
+    <td><img width="100" src="graphics/animation_2.png"/></td>
+  </tr>
+</table>
 
 ### text.npz
 The text object contains
