@@ -19,8 +19,8 @@ data = np.load(file_name)
 Each file returns python object that you need to access using the correct keys to retrive the numpy arrays of the data.
 ### animation.npz
 The animation object contains two numpy array of the same length (15414 entries):
-- frame1: the first frame of the animation
-- frame2: the second frame of the animation
+- "frame1" (15414 entries): the first frame of the animation
+- "frame2" (15414 entries): the second frame of the animation
 Each entry from either "frame1" or "frame2" is an 8x8 binary image.
 
 Here are some examples of the animations:
@@ -35,15 +35,75 @@ Here are some examples of the animations:
 </table>
 
 ### text.npz
-The text object contains
+The text object contains all the game text in four numpy arrays of various length:
+- "games" (447 entries): contains all the game names that's why the number of entries is equal to the number of games.
+- "sprites" (6248 entries): contains all the dialogues that appear when talking to game sprites.
+- "items" (2256 entries): contains all the dialogues that appear when collecting an item.
+- "endings" (512 entries): contains all the game ending text. The number of endings is slightly greater than number of games which signify that some games have multiple endings.
+Each entry is a string that represents game name/sprite dialogue/item dialogue/ending text.
+
+Here are some examples of the text:
+<table align="center">
+    <tr>
+        <th>Game Name</th>
+        <th>Sprite Dialogue</th>
+        <th>Item Dialogue</th>
+        <th>Ending Text</th>
+    </tr>
+    <tr>
+        <td>I am lost on this planet. Alone, yet crowded by thoughts</td>
+        <td>C'est le lit de tes parents.</td>
+        <td>Reinhardt's hat. The unthinkable has clearly occurred. The ice has broken and Reinhardt lies among a tangle of metal and ice.</td>
+        <td>oh hey what if i did something for that tipsy jam though???</td>
+    </tr>
+    <tr>
+        <td>Peter Februar Games presents: {clr2}Indoor Cat{clr2}</td>
+        <td>Audrey: I learned this dance from a Youtube video.</td>
+        <td>o{wvy}{clr2}{clr2}{wvy}</td>
+        <td>Clicking the STOP & EJECT button {shk}flips you{shk} right out of the game!</td>
+    </tr>
+    <tr>
+        <td>{clr1}MY HOUSE{clr1}</td>
+        <td>huh.. the chief has a really nice desk..</td>
+        <td>We had found the cartridge at a yard sale</td>
+        <td>*knock knock*</td>
+    </tr>
+</table>
 
 ### images.npz
 
 ### palettes.npz
+The palettes object contains one numpy array where it represent the 3 colors used for the palette (1579 entries):
+- "data" (1579 entries): Each entry is 9 integers (values between 0 and 255) where each three represent a color of the palette in order (background color then tile color followed by sprite color).
+
+Here are some examples of the palettes:
 
 ### rooms.npz
+The rooms object contains two numpy array. One for the starting rooms (rooms where the avatar starts) and the other for the rest of rooms:
+- "start" (447 entries):
+- "other" (7305 entries):
+
+Each room is 16x16x3 where each channel represents different layer of objects:
+- channel 0: represent all the game tiles. Each entry can have value of 0 (empty), 1 (background tile), and 2 (solid tile).
+- channel 1: represents all the game sprites/items/avatar. Each entry can have value 0 (empty), 1 (avatar), 2 (sprite), and 3 (item).
+- channel 2: represents all the game exits/endings locations. Each entry can have value 0 (empty), 1 (exit), 2 (entrance), 3 (exit and entrance), and 4 (ending).
+
+Here are some examples of rooms:
+<table align="center">
+    <tr>
+        <td><img width="100" src="graphics/room_0.png"/></td>
+        <td><img width="100" src="graphics/room_1.png"/></td>
+        <td><img width="100" src="graphics/room_2.png"/></td>
+        <td><img width="100" src="graphics/room_3.png"/></td>
+        <td><img width="100" src="graphics/room_4.png"/></td>
+    </tr>
+</table>
 
 ### full.npz
+The full object contain one numpy array where each entry represent the text of a full Bitsy game (447 entries):
+- "data" (447 entries): the full game data as a string.
+
+For examples about the full game text. Please refer to the [original repo](https://github.com/Ragzouken/bitsy-archive).
 
 # BitsyDO Project
 
