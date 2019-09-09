@@ -1,5 +1,5 @@
 <p align="center">
-    <img width="800" src="graphics/logo.png">
+    <img width="600" src="graphics/logo.png">
 </p>
 
 # Bitsy Games Data Set
