@@ -130,6 +130,15 @@ The palettes object contains one numpy array where it represent the 3 colors use
 - "data" (1579 entries): Each entry is 9 integers (values between 0 and 255) where each three represent a color of the palette in order (background color then tile color followed by sprite color).
 
 Here are some examples of the palettes:
+<table align="center">
+    <tr>
+        <td><img width="100" src="graphics/palette_0.png"/></td>
+        <td><img width="100" src="graphics/palette_1.png"/></td>
+        <td><img width="100" src="graphics/palette_2.png"/></td>
+        <td><img width="100" src="graphics/palette_3.png"/></td>
+        <td><img width="100" src="graphics/palette_4.png"/></td>
+    </tr>
+</table>
 
 ### rooms.npz
 The rooms object contains two numpy array. One for the starting rooms (rooms where the avatar starts) and the other for the rest of rooms:
