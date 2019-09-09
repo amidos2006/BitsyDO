@@ -1,6 +1,7 @@
 <p align="center">
     <img width="600" src="graphics/logo.png">
 </p>
+This is a repo for the BitsyDO project. BitsyDO project is a clean numpy dataset that can be used to train machine learning algorithms. This project is coupled with a demo called "BitsyDO Game Generator" is a small project that I have been dreaming about where the player writes a summary of a story and the system takes that summary and fully fledge it into a full Bitsy game.
 
 # Bitsy Games Data Set
 This data set combines around 447 [Bitsy](http://ledoux.io/bitsy/editor.html) games that was collected By [Mark Wonnacott](https://candle.itch.io/) in a numpy easy to parse format.
@@ -171,8 +172,8 @@ The full object contain one numpy array where each entry represent the text of a
 
 For examples about the full game text. Please refer to the [original repo](https://github.com/Ragzouken/bitsy-archive).
 
-# BitsyDO Project
-BitsyDO is a small project that I have been dreaming about for awhile. The current implementation is a super simple and silly for that full idea. The main idea is that I want to enable the player to write a summary of a story and BitsyDO take that summary and fully fledge it into a full Bitsy game.
+# BitsyDO Game Generator Project
+BitsyDO Game Generator is a small project that I have been dreaming about for awhile. The current implementation is a super simple and silly for that full idea. The main idea is that I want to enable the player to write a summary of a story and BitsyDO Game Generator takes that summary and fully fledge it into a full Bitsy game.
 
 The current implementation is a simple version of that idea:
 - The system treats each line of the text as a room where it get populated with sprites and tiles. 
