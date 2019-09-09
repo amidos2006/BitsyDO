@@ -71,6 +71,59 @@ Here are some examples of the text:
 </table>
 
 ### images.npz
+The images object contains five different numpy array that represent all the game graphics:
+- "avatar" (447 entries): this numpy array contain all the graphics to all the avatars for the 447 games.
+- "sprites" (14002 entries): this numpy array contains graphics for the game sprites that the player can interact inside the game.
+- "items" (4164 entries): this numpy array contains graphics for all the game items that the player can collect inside the game.
+- "walls" (13843 entries): this numpy array contains graphics to all the game tiles that are walls which means the avatar can't move over them.
+- "background" (59324 entries): this numpy array contains the graphics to all the game tiles that are used as scenery or background as they don't collide with the player.
+All the images are 8x8 binary images.
+
+Here are some examples:
+<table align="center">
+    <tr>
+        <th>Avatar</th>
+        <th>Sprite</th>
+        <th>Item</th>
+        <th>Wall</th>
+        <th>Background</th>
+    </tr>
+    <tr>
+        <td><img width="100" src="graphics/avatar_0.png"/></td>
+        <td><img width="100" src="graphics/sprites_0.png"/></td>
+        <td><img width="100" src="graphics/items_0.png"/></td>
+        <td><img width="100" src="graphics/solidTiles_0.png"/></td>
+        <td><img width="100" src="graphics/backgroundTiles_0.png"/></td>
+    </tr>
+    <tr>
+        <td><img width="100" src="graphics/avatar_1.png"/></td>
+        <td><img width="100" src="graphics/sprites_1.png"/></td>
+        <td><img width="100" src="graphics/items_1.png"/></td>
+        <td><img width="100" src="graphics/solidTiles_1.png"/></td>
+        <td><img width="100" src="graphics/backgroundTiles_1.png"/></td>
+    </tr>
+    <tr>
+        <td><img width="100" src="graphics/avatar_2.png"/></td>
+        <td><img width="100" src="graphics/sprites_3.png"/></td>
+        <td><img width="100" src="graphics/items_2.png"/></td>
+        <td><img width="100" src="graphics/solidTiles_2.png"/></td>
+        <td><img width="100" src="graphics/backgroundTiles_2.png"/></td>
+    </tr>
+    <tr>
+        <td><img width="100" src="graphics/avatar_3.png"/></td>
+        <td><img width="100" src="graphics/sprites_3.png"/></td>
+        <td><img width="100" src="graphics/items_3.png"/></td>
+        <td><img width="100" src="graphics/solidTiles_3.png"/></td>
+        <td><img width="100" src="graphics/backgroundTiles_3.png"/></td>
+    </tr>
+    <tr>
+        <td><img width="100" src="graphics/avatar_4.png"/></td>
+        <td><img width="100" src="graphics/sprites_4.png"/></td>
+        <td><img width="100" src="graphics/items_4.png"/></td>
+        <td><img width="100" src="graphics/solidTiles_4.png"/></td>
+        <td><img width="100" src="graphics/backgroundTiles_4.png"/></td>
+    </tr>
+</table>
 
 ### palettes.npz
 The palettes object contains one numpy array where it represent the 3 colors used for the palette (1579 entries):
