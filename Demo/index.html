@@ -53,6 +53,18 @@
             .generateButton:hover{
                 text-decoration: underline;
             }
+            .downloadButton{
+                display: none;
+                position: absolute;
+                left:50%;
+                cursor: pointer;
+                font-size: 32px;
+                padding-left: 10px;
+                padding-top:5px;
+            }
+            .downloadButton:hover{
+                text-decoration: underline;
+            }
             #playButton{
                 display: block;
             }
@@ -2429,6 +2441,7 @@ CHAR 255
 000000
         </script>
         <script type="text/javascript" src="js/sentimood.js"></script>
+        <script type="text/javascript" src="js/FileSaver.js"></script>
         <script type="text/javascript" src="https://unpkg.com/compromise@latest/builds/compromise.min.js"></script>
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script type="text/javascript" src="js/tracery.min.js"></script>
@@ -2450,6 +2463,9 @@ CHAR 255
             let roomIndex = 0;
             let avatarNoun = "";
             let palleteSwitching = 0;
+
+            let gamenameDownload = "";
+            let gamecodeDownload = "";
             
             let avatarMarkov = new Markov2D();
             avatarMarkov.loadFromCSV("assets/avatar.csv");
@@ -2509,6 +2525,7 @@ CHAR 255
                 let inputText = nlp(document.getElementById("inputText").value.toLowerCase());
                 if(inputText.sentences().length <= 0){
                     alert("You need to have input text to generate a game.");
+                    document.getElementById("genCover").style.display = "none";
                     return "";
                 }
 
@@ -2537,7 +2554,7 @@ CHAR 255
                     else if (tags.indexOf("Place") >= 0 || tags.indexOf("Organization") >= 0) {
                         line = "I am the {clr2}{wvy}" + nlp(n).toTitleCase().out() + "{clr2}{wvy}.";
                     }
-                    else if (tags.indexOf("Uncountable") >= 0) {
+                    else if (tags.indexOf("Uncountable") >= 0 || tags.indexOf("Plural")) {
                         line = "I am {clr2}{wvy}" + nlp(n).toTitleCase().out() + "{wvy}{clr2}.";
                     }
                     spritePossibleLines[n].push(line);
@@ -2693,6 +2710,10 @@ CHAR 255
                         outputText += "\n" + r.getEndingString();
                     }
                 }
+
+                gamenameDownload = "" + gameName;
+                gamecodeDownload = "\n" + outputText + "\n";
+
                 return outputText;
             }
 
@@ -2701,6 +2722,7 @@ CHAR 255
                 if (code.length > 0) {
                     document.getElementById("playButton").style.display = "none";
                     document.getElementById("stopButton").style.display = "block";
+                    document.getElementById("downloadButton").style.display = "block";
                     document.getElementById("inputText").disabled = true;
                     attachCanvas(document.getElementById("game"));
                     load_game(code);
@@ -2716,6 +2738,7 @@ CHAR 255
             function stopExportedGame(){
                 document.getElementById("playButton").style.display = "block";
                 document.getElementById("stopButton").style.display = "none";
+                document.getElementById("downloadButton").style.display = "none";
                 document.getElementById("inputText").disabled = false;
                 stopGame();
                 clearGameData();
@@ -2728,6 +2751,24 @@ CHAR 255
                 context.fillStyle = "#000000";
                 context.fillRect(0, 0, canvas.width, canvas.height);
             }
+
+            function downloadGeneratedGame(){
+                $.ajax({
+                    url: 'assets/game_template.html',
+                    async: false,
+                    dataType: 'html',
+                    success: function (response) {
+                        let newDoc = document.createElement('html');
+                        newDoc.innerHTML = response;
+                        newDoc.getElementsByTagName("title")[0].innerHTML = gamenameDownload;
+                        newDoc.getElementsByTagName("script")[0].innerHTML = gamecodeDownload;
+                        let blob = new Blob([newDoc.outerHTML], {
+                            type: "text/plain;charset=utf-8"
+                        });
+                        saveAs(blob, "generated_game.html");
+                    }
+                });
+            }
         </script>
     </head>
     <body onload="initialize()">
@@ -2735,6 +2776,7 @@ CHAR 255
             <div class="projectName">BITSY-DO Game Generator</div>
             <div id="playButton" class="generateButton" onclick="startExportedGame()">&#x25b6; PLAY</div>
             <div id="stopButton" class="generateButton" onclick="stopExportedGame()">&#9724; STOP</div>
+            <div id="downloadButton" class="downloadButton" onclick="downloadGeneratedGame()">&#9660; DOWNLOAD</div>
         </div>
         <div class="toolarea">
             <div class="leftpanel">
