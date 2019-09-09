@@ -1,3 +1,7 @@
+<p align="center">
+    <img width="800" src="graphics/logo.png">
+</p>
+
 # Bitsy Games Data Set
 This data set combines around 447 [Bitsy](http://ledoux.io/bitsy/editor.html) games that was collected By [Mark Wonnacott](https://candle.itch.io/) in a numpy easy to parse format.
 
