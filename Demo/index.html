@@ -8,7 +8,24 @@
                 overflow: hidden;
                 background-color: darkslateblue;
             }
-
+            
+            .cover{
+                display: none;
+                position: fixed;
+                width: 100%;
+                height: 100%;
+                text-align: center;
+                background-color:#00000088;
+            }
+            .cover-text{
+                position: absolute;
+                text-align: center;
+                color: #FFFFFF;
+                top:50%;
+                left:50%;
+                -ms-transform: translate(-50%,-50%);
+                transform: translate(-50%,-50%);
+            }
             .toolbar{
                 position: fixed;
                 width:100%;
@@ -2432,7 +2449,8 @@ CHAR 255
             let endingIndex = 0;
             let roomIndex = 0;
             let avatarNoun = "";
-
+            let palleteSwitching = 0;
+            
             let avatarMarkov = new Markov2D();
             avatarMarkov.loadFromCSV("assets/avatar.csv");
             let spriteMarkov = new Markov2D();
@@ -2448,7 +2466,7 @@ CHAR 255
             nomoreTracery.loadTraceryRules("assets/noMoreDialog.json");
             let fillingTracery = new TraceryRules();
             fillingTracery.loadTraceryRules("assets/edgeDialog.json");
-
+            
             let endingGraphics = readImageFile("assets/ending.txt");
             let questionGraphics = readImageFile("assets/question.txt");
             let directionGraphics = readImageFile("assets/directions.txt");
@@ -2466,6 +2484,7 @@ CHAR 255
                 endingIndex = 0;
                 roomIndex = 0;
                 avatarNoun = "";
+                palleteSwitching = 0;
 
                 decorationGraphics = { "neg": [], "pos": [], "neutral": [] };
                 spriteGraphics = {};
@@ -2481,20 +2500,21 @@ CHAR 255
                     adjectives = gameNameTracery.mainRules.pos_adjective;
                 }
                 return gameNameTracery.generate({
-                    "name": avatarNoun,
+                    "name": "{clr1}{wvy}" + nlp(avatarNoun).toTitleCase().out() + "{clr1}{wvy}",
                     "adjective": adjectives
                 });
             }
-
+            
             function getGameCode() {
-                let inputText = nlp(document.getElementById("inputText").value);
+                let inputText = nlp(document.getElementById("inputText").value.toLowerCase());
                 if(inputText.sentences().length <= 0){
                     alert("You need to have input text to generate a game.");
                     return "";
                 }
 
                 avatarNoun = inputText.nouns().out('frequency')[0].normal;
-                let uniqueNouns = Array.from(new Set(inputText.nouns().out('array')));
+                let uniqueNouns = Array.from(new Set(inputText.nouns().not(avatarNoun).out('array')));
+                uniqueNouns.push(avatarNoun);
                 let sentences = inputText.sentences().out('array');
                 let associatedSentences = {}
                 for(let n of uniqueNouns){
@@ -2506,16 +2526,19 @@ CHAR 255
                     }
 
                     spritePossibleLines[n] = [];
-                    let tags = nlp(n).out('tags');
-                    let line = "I am a {clr2}{wvy}" + n + "{wvy}{clr2}.";
+                    let tags = nlp(n).out('tags')[0].tags;
+                    let line = "I am a {clr2}{wvy}" + nlp(n).toTitleCase().out() + "{wvy}{clr2}.";
                     if(n[0] == "a" || n[0] == "i" || n[0] == "o" || n[0] == "e"){
-                        line = "I am an {clr2}{wvy}" + n + "{wvy}{clr2}.";
+                        line = "I am an {clr2}{wvy}" + nlp(n).toTitleCase().out() + "{wvy}{clr2}.";
                     }
                     if (tags.indexOf("Person") >= 0) {
                         line = "I am {clr2}{wvy}" + nlp(n).toTitleCase().out() + "{wvy}{clr2}.";
                     }
                     else if (tags.indexOf("Place") >= 0 || tags.indexOf("Organization") >= 0) {
                         line = "I am the {clr2}{wvy}" + nlp(n).toTitleCase().out() + "{clr2}{wvy}.";
+                    }
+                    else if (tags.indexOf("Uncountable") >= 0) {
+                        line = "I am {clr2}{wvy}" + nlp(n).toTitleCase().out() + "{wvy}{clr2}.";
                     }
                     spritePossibleLines[n].push(line);
                     $.ajax({
@@ -2526,6 +2549,20 @@ CHAR 255
                             for (let e of response.edges) {
                                 let text = getTextFromEdge(e, n);
                                 if(text.trim().length > 0){
+                                    spritePossibleLines[n].push(text);
+                                }
+                            }
+                        }
+                    });
+                    $.ajax({
+                        url: 'http://api.urbandictionary.com/v0/define?term=' + n,
+                        async: false,
+                        dataType: 'json',
+                        success: function (response) {
+                            console.log(response);
+                            for (let i of response.list) {
+                                let text = getTextFromUrban(i, n);
+                                if (text.trim().length > 0) {
                                     spritePossibleLines[n].push(text);
                                 }
                             }
@@ -2557,7 +2594,7 @@ CHAR 255
                     if(n in spriteGraphics){
                         continue;
                     }
-                    let sentiScore = getSentiScore(associatedSentences[avatarNoun]);
+                    let sentiScore = getSentiScore(associatedSentences[n]);
                     let lowEntropy = 0;
                     let highEntropy = 0;
                     if (sentiScore < -1) {
@@ -2579,7 +2616,7 @@ CHAR 255
                     wallGraphics["neg"].push(generateGraphics(wallsMarkov, 30, 64, makeCornerSymmetry,0.2, 1));
                     wallGraphics["pos"].push(generateGraphics(wallsMarkov, 30, 64, makeCornerSymmetry, 0, 0.15));
                     wallGraphics["neutral"].push(generateGraphics(wallsMarkov, 30, 64, makeCornerSymmetry, 0.15, 0.2));
-
+                    
                     let symFun = makeLeftCornerSymmetry;
                     if (Math.random() < 0.5) {
                         symFun = makeRightCornerSymmetry;
@@ -2591,11 +2628,11 @@ CHAR 255
 
                 // Generate the actual data objects
                 let gameName = getGameName(avatarNoun, sentences);
-                let palletes = getPalletes();
+                let palletes = getPalletes().concat(getPalletes());
                 let spriteLines = getSprites(sentences);
                 let wallTiles = getWallTiles(sentences);
                 let decorTiles = getDecorTiles(sentences);
-                let directionTiles = getDirectionTiles();
+                let directionTiles = getDirectionTiles(); 
 
                 //Convert to array
                 let walls = [];
@@ -2628,7 +2665,7 @@ CHAR 255
                 let outputText = gameName + "\n";
                 outputText += "\n";
                 outputText += "# BITSY VERSION 6.2\n" +
-                                "\n" +
+                                "\n" + 
                                 "! ROOM_FORMAT 1\n";
                 for(let p of palletes){
                     outputText += "\n" + p.toString();
@@ -2657,18 +2694,23 @@ CHAR 255
                     }
                 }
                 return outputText;
-
             }
-            function startExportedGame() {
+
+            function continueStartExportedGame(){
                 let code = getGameCode();
-                if(code.length > 0){
+                if (code.length > 0) {
                     document.getElementById("playButton").style.display = "none";
                     document.getElementById("stopButton").style.display = "block";
                     document.getElementById("inputText").disabled = true;
                     attachCanvas(document.getElementById("game"));
                     load_game(code);
+                    document.getElementById("genCover").style.display = "none";
                 }
+            }
 
+            function startExportedGame() {
+                document.getElementById("genCover").style.display = "block";
+                setTimeout(continueStartExportedGame, 100);
             }
 
             function stopExportedGame(){
@@ -2704,7 +2746,14 @@ CHAR 255
         </div>
         <div class="footer">
             <div class="affliation" style="text-align: left">Tool by <a href="http://www.akhalifa.com">Ahmed Khalifa</a></div>
-            <div class="affliation" style="text-align: right; right: 0%;">Grab the code from <a href="https://github.com/amidos2006/BitsyDo">Github</a></div>
+            <div class="affliation" style="text-align: right; right: 0%;">Grab the code from <a href="">Github</a></div>
+        </div>
+        <div id="genCover" class="cover">
+            <div class="cover-text">
+            ...Generating...
+            <br/>
+            (It might take awhile)
+            </div>
         </div>
     </body>
 </html>

@@ -83,18 +83,50 @@ function shuffleArray(array){
 
 function getTextFromEdge(edge, noun){
     let output = fillingTracery.generate({"start":["{clr2}{wvy}" + nlp(noun).toTitleCase().out() + "{wvy}{clr2}"],
-        "end":[edge["end"]["label"]]}, edge["rel"]["label"]);
-    if(output.trim().length >= 0){
+        "end": [nlp(edge["end"]["label"]).toTitleCase().out()]}, edge["rel"]["label"]);
+    if(noun == edge["end"]["label"].toLowerCase()){
+        output = fillingTracery.generate({"end":["{clr2}{wvy}" + nlp(noun).toTitleCase().out() + "{wvy}{clr2}"],
+            "start": [nlp(edge["start"]["label"]).toTitleCase().out()]}, edge["rel"]["label"]);
+    }
+    if(output.trim().length >= 0 && Math.random() > 0.75){
         return output;
     }
-    if ("surfaceText" in edge){
-        let newText = edge.surfaceText.replace("[[", "");
-        newText = newText.replace("]]", "");
-        newText = newText.replace(noun, "{clr2}{wvy}" + noun + "{clr2}{wvy}");
-        newText = nlp(newText).match(noun).toTitleCase().out()
-        return newText;
+    if (edge["surfaceText"] != null){
+        return cleanLine(edge.surfaceText, noun);
     }
     return "";
+}
+
+function getTextFromUrban(item, noun){
+    let output = item["definition"];
+    return cleanLine(output, noun);
+}
+
+function cleanLine(line, noun){
+    let output = line + "";
+    output = output.replace(/\[/g, "");
+    output = output.replace(/\]/g, "");
+    let multiLines = output.split("\n");
+    output = "";
+    for(let l of multiLines){
+        let cleanLine = l.trim();
+        if(cleanLine.length == 0){
+            continue;
+        }
+        output += cleanLine[0].toUpperCase() + cleanLine.slice(1);
+        if (cleanLine[cleanLine.length - 1] != "."){
+            output += ". ";
+        }
+    }
+    if(noun != null && noun.trim().length > 0){
+        if (output.indexOf(noun[0].toUpperCase() + noun.slice(1))){
+            output = output.replace(noun[0].toUpperCase() + noun.slice(1), "{clr2}{wvy}" + nlp(noun).toTitleCase().out() + "{clr2}{wvy}");
+        }
+        while(output.indexOf(noun) > -1){
+            output = output.replace(noun, "{clr2}{wvy}" + nlp(noun).toTitleCase().out() + "{clr2}{wvy}");
+        }
+    }
+    return output;
 }
 
 function addScript(u) {

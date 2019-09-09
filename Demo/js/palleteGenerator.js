@@ -48,6 +48,6 @@ function getPalletes(){
     let posPal = new Palette();
     mainColor = 0.5 + Math.random() * 0.25;
     posPal.background.loadFromObject(HSVtoRGB(mainColor, 1, 0.75));
-    posPal.background.loadFromObject(HSVtoRGB(mainColor, Math.random() * 0.2 + 0.4, 1));
+    posPal.tile.loadFromObject(HSVtoRGB(mainColor, Math.random() * 0.2 + 0.4, 1));
     return [negPal, neutralPal, posPal];
 }

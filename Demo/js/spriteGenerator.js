@@ -93,13 +93,20 @@ function getSprites(lines){
         question = new Sprite();
         question.graphic_1 = questionGraphics[qIDX].graphic_1;
         question.graphic_2 = questionGraphics[qIDX].graphic_2;
-        question.dialog = lines[i];
+        let sceneNouns = new Set(nlp(lines[i]).nouns().out('array'));
+        let adjustedLine = lines[i];
+        for(let n of sceneNouns){
+            while(adjustedLine.indexOf(n) > -1){
+                adjustedLine = adjustedLine.replace(n, "{clr2}{wvy}" + nlp(n).toTitleCase().out() + "{clr2}{wvy}");
+            }
+        }
+        question.dialog = cleanLine(adjustedLine, "");
         question.position.x = Math.floor(12 * Math.random() + 2);
         question.position.y = Math.floor(12 * Math.random() + 2);
         question.position.ridx = i + 1;
         spriteLines[i].push(question);
 
-        let sceneNouns = new Set(nlp(lines[i]).nouns().not(avatarNoun).out('array'));
+        sceneNouns = new Set(nlp(lines[i]).nouns().not(avatarNoun).out('array'));
         for(let n of sceneNouns){
             let sprite = new Sprite();
             sprite.graphic_1 = spriteGraphics[n].graphic_1;
@@ -113,13 +120,19 @@ function getSprites(lines){
             else{
                 if (spritePossibleLines[n][0].indexOf("I am") == 0){
                     sprite.dialog = spritePossibleLines[n].splice(0, 1)[0];
+                    if(spritePossibleLines[n].length > 0){
+                        sprite.dialog += " " + spritePossibleLines[n].splice(randomInt(spritePossibleLines[n].length), 1)[0];
+                    }
                 }
                 else{
                     sprite.dialog = spritePossibleLines[n].splice(randomInt(spritePossibleLines[n].length), 1)[0];
                 }
-                for(let i=0; i<Math.min(2, spritePossibleLines[n].length); i++){
-                    if(Math.random() < 0.7){
+                for(let i=0; i< Math.min(randomInt(3), spritePossibleLines[n].length); i++){
+                    if(Math.random() < 0.25){
                         continue;
+                    }
+                    if(sprite.dialog.split(" ").length > 40){
+                        break;
                     }
                     sprite.dialog += " " + spritePossibleLines[n].splice(randomInt(spritePossibleLines[n].length), 1)[0];
                 }

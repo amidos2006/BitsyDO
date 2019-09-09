@@ -56,11 +56,32 @@ class Room{
         for(let y=1; y<this.map.length-1; y++){
             for(let x=1; x<this.map[y].length-1; x++){
                 if(this.map[y][x] == 0){
-                    result.push({"x": x, "y": y});
+                    if (!((this.map[y - 1][x] != 0 && this.map[y + 1][x] != 0) || 
+                        (this.map[y][x - 1] != 0 && this.map[y][x + 1] != 0))){
+                        result.push({ "x": x, "y": y });
+                    }
                 }
             }
         }
         return result;
+    }
+
+    filterEmptyTiles(dijkstraMap, minDistance = -1, maxDistance = -1){
+        let emptyTiles = this.getEmptyTiles();
+        if(maxDistance == -1){
+            maxDistance = 16;
+        }
+        if(minDistance == -1){
+            minDistance = 0;
+        }
+        for(let i=0; i<emptyTiles.length; i++){
+            let p = emptyTiles[i];
+            if(dijkstraMap[p.y][p.x] > maxDistance || dijkstraMap[p.y][p.x] < minDistance){
+                emptyTiles.splice(i,1);
+                i--;
+            }
+        }
+        return emptyTiles;
     }
 
     hasEndings(){
@@ -129,15 +150,16 @@ function decorateMap(room, map, avatar, sprites, palletes, wallTiles, decorTiles
     }
 
     let key = "neutral";
-    room.pIdx = palletes[1].index;
+    room.pIdx = palletes[1 + palleteSwitching * 3].index;
     if(sentiValue < -2){
         key = "neg";
-        room.pIdx = palletes[0].index;
+        room.pIdx = palletes[0 + palleteSwitching * 3].index;
     }
     else if(sentiValue > 2){
         key = "pos";
-        room.pIdx = palletes[2].index;
+        room.pIdx = palletes[2 + palleteSwitching * 3].index;
     }
+    palleteSwitching = (palleteSwitching + 1)%2;
     let wall = wallTiles[key][wallShift];
     let decor = decorTiles[key][wallShift];
     room.map = cloneMap(map);
@@ -197,10 +219,30 @@ function fixSpriteLocations(room, map, avatar, sprites, start, end){
         avatar.position.x = startPos.x;
         avatar.position.y = startPos.y;
     }
-    let currentEmpty = room.getEmptyTiles();
+    let dik = calculateDijkstra(map, startPos.x, startPos.y);
+    let currentEmpty = room.filterEmptyTiles(dik,3, 5);
     shuffleArray(currentEmpty);
     let newMap = cloneMap(map);
-    for(let i=0; i<sprites.length; i++){
+    for (let i = 0; i < 1; i++) {
+        if (currentEmpty.length == 0) {
+            break;
+        }
+        let randomPos = currentEmpty.splice(0, 1)[0];
+        newMap[randomPos.y][randomPos.x] = 1;
+        let dik = calculateDijkstra(newMap, startPos.x, startPos.y);
+        if (dik[endPos.y][endPos.x] != -1) {
+            sprites[i].position.x = randomPos.x;
+            sprites[i].position.y = randomPos.y;
+        }
+        else {
+            i -= 1;
+        }
+    }
+
+    currentEmpty = room.filterEmptyTiles(dik,5, 13);
+    shuffleArray(currentEmpty);
+    newMap = cloneMap(map);
+    for(let i=1; i<sprites.length; i++){
         if(currentEmpty.length == 0){
             break;
         }
@@ -280,7 +322,7 @@ function getRooms(lines, avatar, palletes, spriteLines, wallTiles, decorTiles, d
     }
     let endLocs = getLocationsFromDirection(direction[endIdx][0], direction[endIdx][1]);
     for(let l of endLocs){
-        result[result.length - 1].endings.push(new Ending(l.x, l.y, "This is the end."));
+        result[result.length - 1].endings.push(new Ending(l.x, l.y, "The End"));
     }
     
     return result;

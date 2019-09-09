@@ -142,8 +142,8 @@ Here are some examples of the palettes:
 
 ### rooms.npz
 The rooms object contains two numpy array. One for the starting rooms (rooms where the avatar starts) and the other for the rest of rooms:
-- "start" (447 entries):
-- "other" (7305 entries):
+- "start" (447 entries): represents all the starting rooms in all the 447 games.
+- "other" (7305 entries): represents all the remaining rooms in all the games.
 
 Each room is 16x16x3 where each channel represents different layer of objects:
 - channel 0: represent all the game tiles. Each entry can have value of 0 (empty), 1 (background tile), and 2 (solid tile).
@@ -168,6 +168,17 @@ The full object contain one numpy array where each entry represent the text of a
 For examples about the full game text. Please refer to the [original repo](https://github.com/Ragzouken/bitsy-archive).
 
 # BitsyDO Project
+BitsyDO is a small project that I have been dreaming about for awhile. The current implementation is a super simple and silly for that full idea. The main idea is that I want to enable the player to write a summary of a story and BitsyDO take that summary and fully fledge it into a full Bitsy game.
+
+The current implementation is a simple version of that idea:
+- The system treats each line of the text as a room where it get populated with sprites and tiles. 
+- The system picks the palettes of each room based on the sentiment value of the corresponding line (high contrast in negative sentiment and light colors in positive sentiment). 
+- It also build the layout to reflect the sentiment (tiny and small for negative sentiment and open and wide for positive). 
+- The game sprites correspond to the unique nouns in the summary so each noun is transformed into a game sprite. 
+- For the game graphics, the system uses some simple 2D markov chains trained on the image data to generate all the game sprites.
+- For the game dialogue, the system uses Urban Dictionary and Concept Net to generate the text.
+
+Feel free to fix any bugs or extend the system to make a better BitsyDO system. You can find the source code in the [Demo folder](https://github.com/amidos2006/BitsyDO/tree/master/Demo) on github and you can try the simple system [online](http://www.akhalifa.com/bitsydo/). You always need interenet to use the system online. Be careful, big summaries might take awhile on bad internet.
 
 # Other Bitsy cool Projects and Games
 - [Drowsy](https://github.com/Pyrofoux/Drowsy) by [Younès Rabii](https://twitter.com/Pyrofoux): [https://pyrofoux.itch.io/drowsy](https://pyrofoux.itch.io/drowsy)

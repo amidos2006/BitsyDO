@@ -58,6 +58,17 @@ function connectUnconnectedAreas(map) {
         connectCells(map, c1.x, c1.y, c2.x, c2.y);
         groups.push(g1.concat(g2));
     }
+    groups = [];
+    for (let y = 1; y < map.length - 1; y++) {
+        for (let x = 1; x < map[y].length - 1; x++) {
+            if (newMap[y][x] == 0) {
+                groups.push(getCells(newMap, x, y, groups.length + 1));
+            }
+        }
+    }
+    if(groups.length > 1){
+        console.log("[BUG] If you saw this, please send me the input text.");
+    }
 }
 
 function digHorizontal(map, startX, endX, y) {
@@ -203,4 +214,29 @@ function calculateDijkstra(actualMap, x, y) {
         }
     }
     return map;
+}
+
+function getPathFromDijkstra(dijkstraMap, startX, startY){
+    let directions = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+    let c = {"x": startX, "y": startY};
+    let path = [c];
+    while(dijkstraMap[c.y][c.x] != 0){
+        let smallest = dijkstraMap[c.y][c.x];
+        let smallestC = c;
+        for(let d of directions){
+            let newC = {"x": c.x + d[0],"y": c.y + d[1]};
+            if(newC.x >= 0 && newC.y >= 0 && newC.x < dijkstraMap[0].length && newC.y < dijkstraMap.length){
+                if (dijkstraMap[newC.y][newC.x] != -1 && dijkstraMap[newC.y][newC.x] < smallest){
+                    smallest = dijkstraMap[newC.y][newC.x];
+                    smallestC = newC;
+                }
+            }
+        }
+        if(smallestC.x == c.x && smallestC.y == c.y){
+            return [];
+        }
+        c = smallestC;
+        path.push(smallestC);
+    } 
+    return path;
 }
