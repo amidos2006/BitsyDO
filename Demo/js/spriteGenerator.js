@@ -114,18 +114,19 @@ function getSprites(lines){
             sprite.position.x = Math.floor(12 * Math.random() + 2);
             sprite.position.y = Math.floor(12 * Math.random() + 2);
             sprite.position.ridx = i + 1;
+            sprite.dialog = "{wvy}{clr2}" + nlp(n).toTitleCase().out() + "{clr2}{wvy}: ";
             if(spritePossibleLines[n].length == 0){
-                sprite.dialog = nomoreTracery.generate();
+                sprite.dialog += nomoreTracery.generate();
             }
             else{
                 if (spritePossibleLines[n][0].indexOf("I am") == 0){
-                    sprite.dialog = spritePossibleLines[n].splice(0, 1)[0];
+                    sprite.dialog += spritePossibleLines[n].splice(0, 1)[0];
                     if(spritePossibleLines[n].length > 0){
                         sprite.dialog += " " + spritePossibleLines[n].splice(randomInt(spritePossibleLines[n].length), 1)[0];
                     }
                 }
                 else{
-                    sprite.dialog = spritePossibleLines[n].splice(randomInt(spritePossibleLines[n].length), 1)[0];
+                    sprite.dialog += spritePossibleLines[n].splice(randomInt(spritePossibleLines[n].length), 1)[0];
                 }
                 for(let i=0; i< Math.min(randomInt(3), spritePossibleLines[n].length); i++){
                     if(Math.random() < 0.25){

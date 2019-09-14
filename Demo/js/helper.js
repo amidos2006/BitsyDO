@@ -82,24 +82,24 @@ function shuffleArray(array){
 }
 
 function getTextFromEdge(edge, noun){
-    let output = fillingTracery.generate({"start":["{clr2}{wvy}" + nlp(noun).toTitleCase().out() + "{wvy}{clr2}"],
+    let output = fillingTracery.generate({"start":[nlp(noun).toTitleCase().out()],
         "end": [nlp(edge["end"]["label"]).toTitleCase().out()]}, edge["rel"]["label"]);
     if(noun == edge["end"]["label"].toLowerCase()){
-        output = fillingTracery.generate({"end":["{clr2}{wvy}" + nlp(noun).toTitleCase().out() + "{wvy}{clr2}"],
+        output = fillingTracery.generate({"end":[nlp(noun).toTitleCase().out()],
             "start": [nlp(edge["start"]["label"]).toTitleCase().out()]}, edge["rel"]["label"]);
     }
     if(output.trim().length >= 0 && Math.random() > 0.75){
         return output;
     }
     if (edge["surfaceText"] != null){
-        return cleanLine(edge.surfaceText, noun);
+        return cleanLine(edge.surfaceText);
     }
     return "";
 }
 
 function getTextFromUrban(item, noun){
     let output = item["definition"];
-    return cleanLine(output, noun);
+    return cleanLine(output);
 }
 
 function cleanLine(line, noun){

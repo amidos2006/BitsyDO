@@ -2543,21 +2543,21 @@ CHAR 255
                     }
 
                     spritePossibleLines[n] = [];
-                    let tags = nlp(n).out('tags')[0].tags;
-                    let line = "I am a {clr2}{wvy}" + nlp(n).toTitleCase().out() + "{wvy}{clr2}.";
-                    if(n[0] == "a" || n[0] == "i" || n[0] == "o" || n[0] == "e"){
-                        line = "I am an {clr2}{wvy}" + nlp(n).toTitleCase().out() + "{wvy}{clr2}.";
-                    }
-                    if (tags.indexOf("Person") >= 0) {
-                        line = "I am {clr2}{wvy}" + nlp(n).toTitleCase().out() + "{wvy}{clr2}.";
-                    }
-                    else if (tags.indexOf("Place") >= 0 || tags.indexOf("Organization") >= 0) {
-                        line = "I am the {clr2}{wvy}" + nlp(n).toTitleCase().out() + "{clr2}{wvy}.";
-                    }
-                    else if (tags.indexOf("Uncountable") >= 0 || tags.indexOf("Plural")) {
-                        line = "I am {clr2}{wvy}" + nlp(n).toTitleCase().out() + "{wvy}{clr2}.";
-                    }
-                    spritePossibleLines[n].push(line);
+                    // let tags = nlp(n).out('tags')[0].tags;
+                    // let line = "I am a {clr2}{wvy}" + nlp(n).toTitleCase().out() + "{wvy}{clr2}.";
+                    // if(n[0] == "a" || n[0] == "i" || n[0] == "o" || n[0] == "e"){
+                    //     line = "I am an {clr2}{wvy}" + nlp(n).toTitleCase().out() + "{wvy}{clr2}.";
+                    // }
+                    // if (tags.indexOf("Person") >= 0) {
+                    //     line = "I am {clr2}{wvy}" + nlp(n).toTitleCase().out() + "{wvy}{clr2}.";
+                    // }
+                    // else if (tags.indexOf("Place") >= 0 || tags.indexOf("Organization") >= 0) {
+                    //     line = "I am the {clr2}{wvy}" + nlp(n).toTitleCase().out() + "{clr2}{wvy}.";
+                    // }
+                    // else if (tags.indexOf("Uncountable") >= 0 || tags.indexOf("Plural")) {
+                    //     line = "I am {clr2}{wvy}" + nlp(n).toTitleCase().out() + "{wvy}{clr2}.";
+                    // }
+                    // spritePossibleLines[n].push(line);
                     $.ajax({
                         url: 'http://api.conceptnet.io/query?node=/c/en/' + n + '&other=/c/en',
                         async: false,
@@ -2718,16 +2718,21 @@ CHAR 255
             }
 
             function continueStartExportedGame(){
-                let code = getGameCode();
-                if (code.length > 0) {
-                    document.getElementById("playButton").style.display = "none";
-                    document.getElementById("stopButton").style.display = "block";
-                    document.getElementById("downloadButton").style.display = "block";
-                    document.getElementById("inputText").disabled = true;
-                    attachCanvas(document.getElementById("game"));
-                    load_game(code);
-                    document.getElementById("genCover").style.display = "none";
+                try{
+                    let code = getGameCode();
+                    if (code.length > 0) {
+                        document.getElementById("playButton").style.display = "none";
+                        document.getElementById("stopButton").style.display = "block";
+                        document.getElementById("downloadButton").style.display = "block";
+                        document.getElementById("inputText").disabled = true;
+                        attachCanvas(document.getElementById("game"));
+                        load_game(code);
+                    }
                 }
+                catch(err){
+                    alert("Something went wrong, please try again with different text.")
+                }
+                document.getElementById("genCover").style.display = "none";
             }
 
             function startExportedGame() {
